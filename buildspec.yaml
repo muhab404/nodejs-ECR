@@ -4,10 +4,10 @@ phases:
   install:
     commands:
       - echo Installing Docker...
-      - amazon-linux-extras install docker -y
+      - curl -fsSL https://get.docker.com -o get-docker.sh
+      - sh get-docker.sh
+      - usermod -aG docker $USER
       - service docker start
-      - usermod -a -G docker ec2-user
-      - chkconfig docker on
       - docker --version
   pre_build:
     commands:
