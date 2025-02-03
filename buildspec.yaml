@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201282858.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t nodejs .
+      - echo Tagging the Docker image...
+      - docker tag nodejs:latest 242201282858.dkr.ecr.us-east-1.amazonaws.com/nodejs:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image to ECR...
+      - docker push 242201282858.dkr.ecr.us-east-1.amazonaws.com/nodejs:latest
+      - echo Writing image definitions file...
+      - echo '{"ImageURI":"242201282858.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest"}' > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
