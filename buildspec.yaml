@@ -11,6 +11,11 @@ phases:
       - docker --version
   pre_build:
     commands:
+      - echo Logging in to Docker Hub...
+      - DOCKER_HUB_CREDS=$(aws secretsmanager get-secret-value --secret-id docker-hub-creds --query SecretString --output text)
+      - DOCKER_HUB_USERNAME=$(echo $DOCKER_HUB_CREDS | jq -r .username)
+      - DOCKER_HUB_PASSWORD=$(echo $DOCKER_HUB_CREDS | jq -r .password)
+      - echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201282858.dkr.ecr.us-east-1.amazonaws.com
   build:
