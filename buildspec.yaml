@@ -6,8 +6,8 @@ phases:
       - echo Installing Docker...
       - curl -fsSL https://get.docker.com -o get-docker.sh
       - sh get-docker.sh
-      - usermod -aG docker $USER
-      - service docker start
+      # - usermod -aG docker $USER
+      # - service docker start
       - docker --version
   pre_build:
     commands:
